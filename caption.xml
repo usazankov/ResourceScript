@@ -1,0 +1,14 @@
+﻿<GuiControl xsi:type="GraphicCaption">
+	<Location>
+		<LeftTop X="0" Y="0" />
+        <RightBottom X="0" Y="0" />
+    </Location>
+    <FontSize Width="0" Height="0" />
+    <Alignment>Middle</Alignment>
+        <GraphicColors>
+			<ActiveTextColor R="240" G="240" B="240" />
+			<PassiveTextColor R="240" G="240" B="240" />
+			<ActiveBackgroundColor R="214" G="56" B="58" />
+			<PassiveBackgroundColor R="214" G="56" B="58" />
+        </GraphicColors>
+</GuiControl>
