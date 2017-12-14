@@ -23,12 +23,13 @@ bool AdderToRes::process()
 {
     //Сначала парсим то, что хотим вставить
     QDomDocument domDoc;
+    QDomDocument domDoc_part;
     QFile file(partXml);
     if(file.open(QIODevice::ReadOnly))
     {
-        if(domDoc.setContent(&file))
+        if(domDoc_part.setContent(&file))
         {
-            elementXml = domDoc.documentElement();
+            elementXml = domDoc_part.documentElement();
             qDebug() << elementXml.nodeName();
             qDebug() << elementXml.attribute("xsi:type");
         }
@@ -45,7 +46,7 @@ bool AdderToRes::process()
             //Находим Section Dialogs
             if(findSectionNode(domElement, "Dialogs"))
             {
-               qDebug() << section.attribute("Name");
+               qDebug() << section.toElement().attribute("Name");
                //Section Dialog нашли? Ищем Тэг Configurations
                //Первый элемент Handlers
                domElement = section.firstChildElement();
@@ -62,8 +63,10 @@ bool AdderToRes::process()
                         //qDebug() << domElement.attribute("Name");
                         if(list.contains(domElement.attribute("Name")))
                         {
+                            //domElement.appendChild(elementXml.cloneNode());
                             qDebug() << domElement.attribute("Name");
-                            if(addPartXmlToConfiguration(domElement))
+                            QDomElement conf = domElement;
+                            if(addPartXmlToConfiguration(conf))
                             {
                                 qDebug() << "SUCCESS\n";
                             }
@@ -71,10 +74,12 @@ bool AdderToRes::process()
                             {
                                 qDebug() << "ERROR\n";
                             }
+
                         }
                         domElement = domElement.nextSiblingElement();
                     }
-                    return 1;
+                    saveToFile(domDoc);
+                    return 1;//saveToFile(domDoc);
                }
                else
                {
@@ -96,14 +101,14 @@ bool AdderToRes::process()
     }
 }
 
-bool AdderToRes::findSectionNode(const QDomNode& node ,const QString& value)
+bool AdderToRes::findSectionNode(QDomNode& node ,const QString& value)
 {
     if(node.isElement())
     {
         QDomElement element = node.toElement();
         if(element.tagName() == "Section" && element.attribute("Name") == value)
         {
-            section = element;
+            section = node;
             return true;
         }
     }
@@ -124,9 +129,8 @@ bool AdderToRes::findSectionNode(const QDomNode& node ,const QString& value)
     return false;
 }
 
-bool AdderToRes::addPartXmlToConfiguration(const QDomElement &element)
+bool AdderToRes::addPartXmlToConfiguration(QDomNode &el)
 {
-    QDomNode el = element;
     QDomNode dialog;
     if(el.nodeName() != "Configuration")
     {
@@ -153,15 +157,33 @@ bool AdderToRes::addPartXmlToConfiguration(const QDomElement &element)
         if(el.nodeName() == "DialogControls")
         {
             qDebug() << "OK";
-            el = el.appendChild(elementXml);
+            el.appendChild(elementXml.cloneNode());
+        }else
+        {
+            return false;
         }
         dialog = dialog.nextSibling();
     }
-    return false;
+    return true;
 }
 
 void AdderToRes::error()
 {
     cout << "Ошибка! Структура xml файла не подходит под программу!";
     exit(-1);
+}
+
+bool AdderToRes::saveToFile(const QDomDocument &doc)
+{
+    QFile outFile( "simple-modified.xml" );
+    if( !outFile.open( QIODevice::WriteOnly | QIODevice::Text ) )
+    {
+        qDebug( "Failed to open file for writing." );
+        return 0;
+    }
+    QTextStream stream( &outFile );
+    stream.setCodec("UTF-8");
+    stream.setGenerateByteOrderMark(true);
+    stream << doc.toString();
+    outFile.close();
 }

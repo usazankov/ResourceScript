@@ -17,14 +17,15 @@ signals:
 public slots:
 
 private:
-    bool findSectionNode(const QDomNode& node, const QString& value);
-    bool addPartXmlToConfiguration(const QDomElement &element);
+    bool findSectionNode(QDomNode &node, const QString& value);
+    bool addPartXmlToConfiguration(QDomNode &element);
     void error();
+    bool saveToFile(const QDomDocument& doc);
     QString src;
     QString dest;
     QString partXml;
     QDomElement elementXml;//То, что будем впихивать в каждый диалог
-    QDomElement section;
+    QDomNode section;
 };
 
 #endif // ADDERTORES_H
