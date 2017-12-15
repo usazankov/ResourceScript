@@ -11,8 +11,8 @@ namespace
                               "800x480_Pax_IG",
                               "320x240_Pax_IG_D210E"};
 }
-AdderToRes::AdderToRes(const QString &srcfile,const QString &filePartXML, const QString &destfile, QObject *parent) :
-    QObject(parent), src(srcfile), partXml(filePartXML), dest(destfile)
+AdderToRes::AdderToRes(const QString &srcfile, const QString &filePartXML, QObject *parent) :
+    QObject(parent), src(srcfile), partXml(filePartXML)
 {
 #ifndef QT_NO_TEXTCODEC
     cout.setCodec("csIBM866");
@@ -78,8 +78,7 @@ bool AdderToRes::process()
                         }
                         domElement = domElement.nextSiblingElement();
                     }
-                    saveToFile(domDoc);
-                    return 1;//saveToFile(domDoc);
+                    return saveToFile(domDoc);
                }
                else
                {
@@ -101,7 +100,7 @@ bool AdderToRes::process()
     }
 }
 
-bool AdderToRes::findSectionNode(QDomNode& node ,const QString& value)
+bool AdderToRes::findSectionNode(QDomNode& node , const QString& value)
 {
     if(node.isElement())
     {
@@ -175,7 +174,7 @@ void AdderToRes::error()
 
 bool AdderToRes::saveToFile(const QDomDocument &doc)
 {
-    QFile outFile( "simple-modified.xml" );
+    QFile outFile( "unipos-modified.xml" );
     if( !outFile.open( QIODevice::WriteOnly | QIODevice::Text ) )
     {
         qDebug( "Failed to open file for writing." );

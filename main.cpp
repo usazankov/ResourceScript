@@ -33,24 +33,17 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    if(positionalArguments.count() > 3)
+    if(positionalArguments.count() > 2)
     {
         cout << QString("Слишком много аргументов\n");
         cout << parser.applicationDescription();
         return 0;
     }
-    else if(positionalArguments.count() <= 2 )
-    {
-        cout << QString("Слишком мало аргументов\n");
-        cout << parser.applicationDescription();
-        return 0;
-    }
-    if(positionalArguments.count() == 3)
+    else if(positionalArguments.count() == 2 )
     {
         cout << positionalArguments.at(0) << QString('\n');
         cout << positionalArguments.at(1) << QString('\n');
-        cout << positionalArguments.at(2) << QString('\n');
-        AdderToRes adder(positionalArguments.at(0), positionalArguments.at(1), positionalArguments.at(2));
+        AdderToRes adder(positionalArguments.at(0), positionalArguments.at(1));
         adder.process();
     }
     return 1;

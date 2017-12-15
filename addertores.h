@@ -10,7 +10,7 @@ class AdderToRes : public QObject
 {
     Q_OBJECT
 public:
-    explicit AdderToRes(const QString &srcfile, const QString &filePartXML, const QString &destfile, QObject *parent = nullptr);
+    explicit AdderToRes(const QString &srcfile, const QString &filePartXML, QObject *parent = nullptr);
     bool process();
 signals:
 
@@ -22,7 +22,6 @@ private:
     void error();
     bool saveToFile(const QDomDocument& doc);
     QString src;
-    QString dest;
     QString partXml;
     QDomElement elementXml;//То, что будем впихивать в каждый диалог
     QDomNode section;
